@@ -1,8 +1,60 @@
 """Constants for the Pass Pocket Safety pipeline."""
+from __future__ import annotations
+
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA_DIR = ROOT / "data_repo" / "data"
+
+# ---- Data location -----------------------------------------------------------
+# Resolution order: POCKET_DATA_DIR env var (also set by `run.py --data-dir`),
+# then the first candidate below that contains tracking/tracking_*.csv.
+DATA_ENV_VAR = "POCKET_DATA_DIR"
+_DATASET = "nfl-big-data-bowl-regional-event-data"
+DATA_CANDIDATES = [
+    ROOT / "data_repo" / "data",
+    ROOT / "data",
+    ROOT / _DATASET / "data",
+    ROOT / f"{_DATASET}-main" / "data",
+    ROOT.parent / _DATASET / "data",           # dataset cloned next to this repo
+    ROOT.parent / f"{_DATASET}-main" / "data",
+]
+
+
+def _has_tracking(d: Path) -> bool:
+    return (d / "tracking").is_dir() and any((d / "tracking").glob("tracking_*.csv"))
+
+
+def _normalise(d: Path) -> Path:
+    """Accept the dataset root, its data/ folder, or the tracking/ folder itself."""
+    d = Path(d).expanduser().resolve()
+    for cand in (d, d / "data", d.parent):
+        if _has_tracking(cand):
+            return cand
+    return d
+
+
+def resolve_data_dir() -> Path:
+    env = os.environ.get(DATA_ENV_VAR)
+    if env:
+        return _normalise(Path(env))
+    for cand in DATA_CANDIDATES:
+        if _has_tracking(cand):
+            return cand.resolve()
+    return DATA_CANDIDATES[0]
+
+
+def set_data_dir(path: str | os.PathLike | None) -> Path:
+    """Point the pipeline at a dataset folder (propagates to worker processes)."""
+    global DATA_DIR, TRACKING_DIR
+    if path is not None:
+        os.environ[DATA_ENV_VAR] = str(Path(path).expanduser().resolve())
+    DATA_DIR = resolve_data_dir()
+    TRACKING_DIR = DATA_DIR / "tracking"
+    return DATA_DIR
+
+
+DATA_DIR = resolve_data_dir()
 TRACKING_DIR = DATA_DIR / "tracking"
 OUT_DIR = ROOT / "outputs"
 CACHE_PATH = OUT_DIR / "frames.parquet"

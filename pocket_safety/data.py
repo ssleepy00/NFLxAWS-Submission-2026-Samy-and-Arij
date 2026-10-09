@@ -11,6 +11,7 @@ Column handling follows Section 1 of the spec:
 """
 from __future__ import annotations
 
+import os
 from concurrent.futures import ProcessPoolExecutor
 
 import numpy as np
@@ -30,6 +31,8 @@ def load_tracking(game_id: int, plays: pd.DataFrame | None = None) -> pd.DataFra
     """Load one game's tracking file and apply the row-level transforms."""
     df = pd.read_csv(C.TRACKING_DIR / f"tracking_{game_id}.csv")
     df = df.drop(columns=["time"])
+    # pandas < 2.0 keeps the literal string "None"; normalise to NaN everywhere.
+    df["event"] = df["event"].replace("None", np.nan)
 
     # --- playDirection: make every play move left -> right, then drop ----------
     left = df["playDirection"].eq("left").to_numpy()
@@ -179,12 +182,36 @@ def add_target(frames: pd.DataFrame) -> pd.DataFrame:
     return frames
 
 
-def build_all_frames(force: bool = False, workers: int = 8) -> pd.DataFrame:
+class DataNotFoundError(FileNotFoundError):
+    pass
+
+
+def check_data_dir() -> list[int]:
+    """Validate the dataset folder and return the available game ids."""
+    tracking = sorted(C.TRACKING_DIR.glob("tracking_*.csv"))
+    missing = [f for f in ("plays.csv", "pffScoutingData.csv") if not (C.DATA_DIR / f).exists()]
+    if not tracking or missing:
+        searched = "\n".join(f"  - {p}" for p in C.DATA_CANDIDATES)
+        problem = (f"no tracking_*.csv files in {C.TRACKING_DIR}" if not tracking
+                   else f"missing {', '.join(missing)} in {C.DATA_DIR}")
+        raise DataNotFoundError(
+            f"Dataset not found: {problem}.\n"
+            f"Searched (unless {C.DATA_ENV_VAR} / --data-dir is set):\n{searched}\n"
+            "Fix: download the data (see README) or point to it explicitly, e.g.\n"
+            "  python run.py --data-dir /path/to/nfl-big-data-bowl-regional-event-data/data")
+    return sorted(int(p.stem.split("_")[1]) for p in tracking)
+
+
+def build_all_frames(force: bool = False, workers: int | None = None) -> pd.DataFrame:
     if C.CACHE_PATH.exists() and not force:
         return pd.read_parquet(C.CACHE_PATH)
-    game_ids = sorted(int(p.stem.split("_")[1]) for p in C.TRACKING_DIR.glob("tracking_*.csv"))
+    game_ids = check_data_dir()
+    workers = workers or min(8, os.cpu_count() or 1)
     with ProcessPoolExecutor(max_workers=workers) as ex:
-        parts = list(ex.map(build_game_frames, game_ids))
+        parts = [p for p in ex.map(build_game_frames, game_ids) if len(p)]
+    if not parts:
+        raise ValueError(f"Read {len(game_ids)} tracking files from {C.TRACKING_DIR} but produced no "
+                         "pocket-phase frames; check the files are the BDB 2023 tracking CSVs.")
     frames = pd.concat(parts, ignore_index=True)
     C.OUT_DIR.mkdir(parents=True, exist_ok=True)
     frames.to_parquet(C.CACHE_PATH, index=False)

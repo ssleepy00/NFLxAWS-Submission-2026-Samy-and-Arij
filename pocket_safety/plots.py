@@ -55,7 +55,8 @@ def feature_importance(model, features, top=20):
 def pff_validation(per_play, auc):
     fig, ax = plt.subplots(figsize=(5.5, 4.5))
     groups = [per_play.loc[~per_play["pressure"], "min_pred"], per_play.loc[per_play["pressure"], "min_pred"]]
-    ax.boxplot(groups, tick_labels=["no pressure", "PFF hit/hurry/sack"])
+    ax.boxplot(groups)  # `tick_labels=` needs matplotlib >= 3.9
+    ax.set_xticks([1, 2], ["no pressure", "PFF hit/hurry/sack"])
     ax.set(ylabel="min predicted safety score in play", title=f"External check vs PFF charting (AUC={auc:.3f})")
     _save(fig, "pff_validation.png")
 
