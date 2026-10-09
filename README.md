@@ -29,7 +29,7 @@ python3 run.py --data-dir ~/Downloads/nfl-big-data-bowl-regional-event-data
 ```
 If no data is found, the script exits with a message listing every path it searched.
 
-Outputs are written to `outputs/`. The 149 MB frame cache `outputs/frames.parquet` is rebuilt locally and not committed.
+Outputs are written to `judge/outputs/`. The 149 MB frame cache `judge/outputs/frames.parquet` is rebuilt locally and not committed.
 
 ## Pipeline
 1. **Clean (`data.load_tracking`)**: drop `time`; flip plays with `playDirection == "left"` so offense always moves left to right (x, y, o, dir), then drop `playDirection`; convert `o` and `dir` to sin/cos; set `is_offense` where `team == possessionTeam`.
@@ -67,12 +67,12 @@ Outputs are written to `outputs/`. The 149 MB frame cache `outputs/frames.parque
 
 **External check:** PFF pressure charts were never used in training. Even so, a play's lowest predicted score separates plays PFF charted as a hit, hurry or sack from the rest with **AUC 0.866**.
 
-Figures in `outputs/`: `ridge_vs_lasso.png`, `lasso_sparsity.png`, `pca_variance.png`, `pred_vs_actual.png`, `feature_importance.png`, `pff_validation.png`, `play_timelines.png`, `field_snapshot.png`.
+Figures in `judge/outputs/`: `ridge_vs_lasso.png`, `lasso_sparsity.png`, `pca_variance.png`, `pred_vs_actual.png`, `feature_importance.png`, `pff_validation.png`, `play_timelines.png`, `field_snapshot.png`.
 
 ## Key example
-[`keyExample/`](keyExample/) walks through one clean-pocket play, Murray to Hopkins for 15 yards. It has an animated GIF of the player tracking synced with the pocket safety score, plus static key frames and a per-frame CSV.
+[`judge/keyExample/`](judge/keyExample/) walks through one clean-pocket play, Murray to Hopkins for 15 yards. It has an animated GIF of the player tracking synced with the pocket safety score, plus static key frames and a per-frame CSV.
 
-![key example](keyExample/pocket_safety_example.gif)
+![key example](judge/keyExample/pocket_safety_example.gif)
 
 ## What makes a safe, successful pocket?
-See [`analysis/`](analysis/README.md) for a data-driven breakdown of 8.5k dropbacks: how pocket safety relates to completions, sacks and yards, the pocket clock, and the protection factors that go with clean pockets.
+See [`judge/analysis/`](judge/analysis/README.md) for a data-driven breakdown of 8.5k dropbacks: how pocket safety relates to completions, sacks and yards, the pocket clock, and the protection factors that go with clean pockets.

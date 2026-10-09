@@ -1,6 +1,6 @@
 # What makes a successful, safe pocket?
 
-This analysis covers 8,533 dropbacks from 122 games of BDB 2023 data (weeks 1–8, 2021). Run it with `python analysis/pocket_drivers.py`; it takes about 40 s. Every number below comes from `output/tables.md` and `output/*.csv`.
+This analysis covers 8,533 dropbacks from 122 games of BDB 2023 data (weeks 1–8, 2021). Run it with `python judge/analysis/pocket_drivers.py`; it takes about 40 s. Every number below comes from `output/tables.md` and `output/*.csv`.
 
 ## 1. A safe pocket does make plays succeed
 

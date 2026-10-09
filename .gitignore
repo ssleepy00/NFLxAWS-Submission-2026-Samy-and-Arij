@@ -1,7 +1,7 @@
 # raw dataset (download per README)
 data_repo/
 # regenerated frame cache (>100 MB)
-outputs/frames.parquet
+judge/outputs/frames.parquet
 .venv/
 __pycache__/
 *.pyc

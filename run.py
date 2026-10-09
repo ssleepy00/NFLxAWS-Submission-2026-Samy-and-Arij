@@ -14,7 +14,7 @@ from pocket_safety import config
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--rebuild", action="store_true", help="recompute outputs/frames.parquet")
+    ap.add_argument("--rebuild", action="store_true", help="recompute judge/outputs/frames.parquet")
     ap.add_argument("--data-dir", help="folder containing plays.csv, pffScoutingData.csv and tracking/")
     args = ap.parse_args()
 
