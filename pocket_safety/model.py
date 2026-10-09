@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from sklearn.decomposition import PCA
 from sklearn.linear_model import Lasso, Ridge
-from sklearn.metrics import mean_absolute_error, r2_score, roc_auc_score, root_mean_squared_error
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, roc_auc_score
 from sklearn.model_selection import GridSearchCV, GroupKFold, GroupShuffleSplit
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -64,7 +64,7 @@ def adj_r2_scorer(estimator: Pipeline, X, y) -> float:
 
 def _metrics(y, p, k: int) -> dict:
     return {"adj_r2": adjusted_r2(y, p, k),
-            "rmse": float(root_mean_squared_error(y, p)),
+            "rmse": float(np.sqrt(mean_squared_error(y, p))),
             "mae": float(mean_absolute_error(y, p)),
             "p": int(k)}
 

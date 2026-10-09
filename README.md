@@ -6,13 +6,28 @@ Predicts a per-frame **Pocket Safety Score (0–100)** from NFL Big Data Bowl 20
 ([dataset](https://github.com/ThompsonJamesBliss/nfl-big-data-bowl-regional-event-data)). 100 means a clean pocket and 0 means the pocket has collapsed.
 
 ```bash
-# data (~830 MB, not committed)
+# 1. data (~830 MB, not committed) -> ./data_repo/data
 curl -L -o repo.zip https://codeload.github.com/ThompsonJamesBliss/nfl-big-data-bowl-regional-event-data/zip/refs/heads/main
 unzip -q repo.zip && mv nfl-big-data-bowl-regional-event-data-main data_repo && rm repo.zip
 
-uv venv .venv -p 3.11 && uv pip install -p .venv -r requirements.txt
-.venv/bin/python run.py            # ~1–2 min on 8 cores; add --rebuild to recompute the frame cache
+# 2. environment (Python 3.9+)
+python3 -m pip install -r requirements.txt
+
+# 3. run (~1–2 min on 8 cores)
+python3 run.py                     # add --rebuild to recompute the frame cache
 ```
+
+**Data location.** `run.py` looks for a folder that contains `plays.csv`, `pffScoutingData.csv` and `tracking/tracking_*.csv`. It searches these places, in order:
+- `./data_repo/data`
+- `./data`
+- `./nfl-big-data-bowl-regional-event-data[-main]/data`
+- the same dataset folder placed **next to** this repo, e.g. `~/Documents/GitHub/nfl-big-data-bowl-regional-event-data`
+
+If the data is somewhere else, pass its path with `--data-dir` or set `POCKET_DATA_DIR`. Either one accepts the dataset root or its `data/` folder:
+```bash
+python3 run.py --data-dir ~/Downloads/nfl-big-data-bowl-regional-event-data
+```
+If no data is found, the script exits with a message listing every path it searched.
 
 Outputs are written to `outputs/`. The 149 MB frame cache `outputs/frames.parquet` is rebuilt locally and not committed.
 
