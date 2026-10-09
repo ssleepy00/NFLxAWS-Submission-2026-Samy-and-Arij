@@ -6,9 +6,9 @@ Builds one row per dropback (8.5k plays, 122 games) with
                  OL depth, QB-to-OL cushion; QB set depth and drift over the pocket
   * pocket:      observed pocket safety (target score), closest defender, time to throw
   * outcomes:    PFF pressure (hit/hurry/sack), sack, completion, INT, yards
-and writes tables + figures to analysis/output/.
+and writes tables + figures to judge/analysis/output/.
 
-Usage (repo root):  python analysis/pocket_drivers.py [--data-dir PATH]
+Usage (repo root):  python judge/analysis/pocket_drivers.py [--data-dir PATH]
 """
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE.parent))
+sys.path.insert(0, str(HERE.parents[1]))  # repo root
 
 import matplotlib  # noqa: E402
 

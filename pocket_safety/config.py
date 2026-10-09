@@ -56,7 +56,7 @@ def set_data_dir(path: str | os.PathLike | None) -> Path:
 
 DATA_DIR = resolve_data_dir()
 TRACKING_DIR = DATA_DIR / "tracking"
-OUT_DIR = ROOT / "outputs"
+OUT_DIR = ROOT / "judge" / "outputs"
 CACHE_PATH = OUT_DIR / "frames.parquet"
 
 FIELD_LENGTH = 120.0

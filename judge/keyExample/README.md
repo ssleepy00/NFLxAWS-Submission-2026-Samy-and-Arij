@@ -28,8 +28,8 @@ The animation plays at half speed, and the score panels are lined up in time wit
 
 ## Reproduce / try another play
 ```bash
-python3 keyExample/make_key_example.py                                  # this play
-python3 keyExample/make_key_example.py --game 2021092611 --play 3118    # any gameId/playId
-python3 keyExample/make_key_example.py --data-dir /path/to/dataset --fps 10
+python3 judge/keyExample/make_key_example.py                                  # this play
+python3 judge/keyExample/make_key_example.py --game 2021092611 --play 3118    # any gameId/playId
+python3 judge/keyExample/make_key_example.py --data-dir /path/to/dataset --fps 10
 ```
-Predictions come from `outputs/test_predictions.parquet` for held-out plays, and from `outputs/model.joblib` otherwise. Each run also writes `play_frames.csv` with the per-frame scores and nearest-defender distance.
+Predictions come from `judge/outputs/test_predictions.parquet` for held-out plays, and from `judge/outputs/model.joblib` otherwise. Each run also writes `play_frames.csv` with the per-frame scores and nearest-defender distance.
