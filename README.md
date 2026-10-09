@@ -68,3 +68,8 @@ Outputs are written to `outputs/`. The 149 MB frame cache `outputs/frames.parque
 **External check:** PFF pressure charts were never used in training. Even so, a play's lowest predicted score separates plays PFF charted as a hit, hurry or sack from the rest with **AUC 0.866**.
 
 Figures in `outputs/`: `ridge_vs_lasso.png`, `lasso_sparsity.png`, `pca_variance.png`, `pred_vs_actual.png`, `feature_importance.png`, `pff_validation.png`, `play_timelines.png`, `field_snapshot.png`.
+
+## Key example
+[`keyExample/`](keyExample/) walks through one clean-pocket play, Murray to Hopkins for 15 yards. It has an animated GIF of the player tracking synced with the pocket safety score, plus static key frames and a per-frame CSV.
+
+![key example](keyExample/pocket_safety_example.gif)
