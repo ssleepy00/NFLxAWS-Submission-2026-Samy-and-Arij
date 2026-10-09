@@ -1,0 +1,12 @@
+group,n_features,adj_r2_drop
+nearest 2 defenders: distance,2,0.5825
+defenders: position rel. QB,14,0.0957
+defenders: closing speed,7,0.0691
+defenders: speed/accel/angles,49,0.0626
+blockers: position rel. QB,14,0.0302
+blockers: distance,7,0.0203
+QB: movement & facing,7,0.0128
+blockers: closing/speed/angles,56,0.011
+other defenders: distance,5,0.0026
+time since snap,2,0.0009
+QB: depth & lateral position,2,0.0
