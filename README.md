@@ -73,3 +73,6 @@ Figures in `outputs/`: `ridge_vs_lasso.png`, `lasso_sparsity.png`, `pca_variance
 [`keyExample/`](keyExample/) walks through one clean-pocket play, Murray to Hopkins for 15 yards. It has an animated GIF of the player tracking synced with the pocket safety score, plus static key frames and a per-frame CSV.
 
 ![key example](keyExample/pocket_safety_example.gif)
+
+## What makes a safe, successful pocket?
+See [`analysis/`](analysis/README.md) for a data-driven breakdown of 8.5k dropbacks: how pocket safety relates to completions, sacks and yards, the pocket clock, and the protection factors that go with clean pockets.

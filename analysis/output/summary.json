@@ -1,0 +1,5 @@
+{
+  "n_plays": 8533,
+  "pressure_logit_cv_auc": 0.760717916174561,
+  "model_test_adj_r2": 0.762237536321844
+}
